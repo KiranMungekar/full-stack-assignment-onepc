@@ -1,17 +1,39 @@
 "use server"
 
-import * as z from "zod"
-import { revalidatePath } from 'next/cache';
-
-//import { connection } from '../mongoose';
-
+import bcrypt from 'bcryptjs';
 import { RegisterSchema } from "@/schemas";
 
+import { connection } from '@/lib/mongoose';
+import { getUserByEmail } from '@/lib/data-service/users'
+import User from '@/lib/model/user.model'
+
 export const register = async (values: any) => {
+  try{
+    await connection();
     const validatedFields = RegisterSchema.safeParse(values);
     if(!validatedFields.success){
         return { error: "Failed while creating account!" }
     }
-    console.log(values)
-    return { success: 'Account created successfully!' }   
+    const { username, email, password } = validatedFields.data
+
+    const existingUser:any = await getUserByEmail(email);
+
+    if(existingUser){
+        return { error: "EmailId already exists! "}
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    //Create a User
+    await User.create({
+        email,
+        username,
+        password: hashedPassword
+    })
+
+    return { success: 'User created successfully!' }  
+
+  } catch(err){
+    return { success: 'Something went wrong!' }
+  }
 }

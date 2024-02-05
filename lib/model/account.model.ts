@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 
 const accountSchema = new mongoose.Schema({
     id: {type: String, require: true, unique: true},
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
     type: {type: String},
     provider:{type: String},
     providerAccountId: {type: String},

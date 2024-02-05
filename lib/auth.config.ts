@@ -26,6 +26,7 @@ export default {
           const { email, password } = validatedFields.data;
           try{
             await connection();
+            console.log('In Authorization Creds')
             const user = await getUserByEmail(email);
             if (!user || !user.password) return null;
     

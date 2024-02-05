@@ -17,8 +17,6 @@ export const {
   callbacks: {
     async signIn({ user, account, profile }) {
      //Not working dont know why?
-      console.log(profile)
-      console.log(user)
       if (account?.provider === "github" || account?.provider === 'google') {
         try {
           const user = await getUserByEmail(profile?.email || '')

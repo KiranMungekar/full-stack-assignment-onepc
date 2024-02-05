@@ -1,7 +1,10 @@
 import User from '@/lib/model/user.model'
 import { v4 as uuidv4 } from 'uuid';
+import { connection } from '@/lib/mongoose'
 
 export const getUserByEmail = async (email: string) => {
+    console.log(email);
+    await connection();
     try{
         const userData = await User.findOne({ email: email });
         return userData;
@@ -24,6 +27,7 @@ export const getUserById = async (id: string) => {
 }
 
 export const createNewUser = async (email: string, name: string) => {
+    await connection();
     const existingUser:any = await getUserByEmail(email);
 
     if(existingUser){
